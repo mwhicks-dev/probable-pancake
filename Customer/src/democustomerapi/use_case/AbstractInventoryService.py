@@ -5,17 +5,17 @@ from entity import Inventory
 class AbstractInventoryService(ABC):
 
     @abstractmethod
-    def create_inventory(inv: Inventory) -> int:
+    def create_inventory(self, inv: Inventory) -> int:
         pass
 
     @abstractmethod
-    def read_inventory(id: int) -> Inventory:
+    def read_inventory(self, id: int) -> Inventory:
         pass
 
     @abstractmethod
-    def update_inventory(id: int, inv: Inventory) -> None:
+    def update_inventory(self, id: int, inv: Inventory) -> None:
         pass
 
     @abstractmethod
-    def delete_inventory(id: int) -> None:
+    def delete_inventory(self, id: int) -> None:
         pass
