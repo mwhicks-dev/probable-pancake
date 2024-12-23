@@ -13,5 +13,9 @@ class AbstractOrderInventoryService(ABC):
         pass
 
     @abstractmethod
+    def read_items_from_order(order_id: int) -> list[OrderInventory]:
+        pass
+
+    @abstractmethod
     def delete_item_from_order(order_id: int, item_id: int) -> None:
         pass
