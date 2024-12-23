@@ -1,0 +1,3 @@
+# hide build dirs
+dist/
+**.egg-info/

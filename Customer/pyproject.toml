@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "probable-pancake-customer"
+version = "0.0.1"
+authors = [
+  { name="Mason", email="mason@hicksm.dev" },
+]
+description = "Application ran by edge devices in this demo."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "fastapi >= 0.115.6",
+  "sqlmodel >= 0.0.22"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["customer-application*"]
+
+[project.urls]
+Homepage = "https://github.com/mwhicks-dev/probable-pancake/"
+Issues = "https://github.com/mwhicks-dev/probable-pancake/issues"
