@@ -1,5 +1,5 @@
-from democustomerapi.entity import OrderInventory
-from democustomerapi.use_case import AbstractOrderInventoryService
+from democustomerapi.entity.OrderInventory import OrderInventory
+from democustomerapi.use_case.AbstractOrderInventoryService import AbstractOrderInventoryService
 
 class TemporaryOrderInventoryService(AbstractOrderInventoryService):
 

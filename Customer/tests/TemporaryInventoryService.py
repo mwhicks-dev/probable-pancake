@@ -1,5 +1,5 @@
-from democustomerapi.entity import Inventory
-from democustomerapi.use_case import AbstractInventoryService
+from democustomerapi.entity.Inventory import Inventory
+from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
 
 class TemporaryInventoryService(AbstractInventoryService):
 
@@ -8,13 +8,8 @@ class TemporaryInventoryService(AbstractInventoryService):
     def __init__(self):
         self.inventory_map = {}
 
-    def create_inventory(self, inv: Inventory) -> int:
-        res: int = len(self.inventory_map)
-        while res in self.inventory_map:
-            res += 1
-        self.inventory_map[res] = inv
-        inv.id = res
-        return res
+    def create_inventory(self, inv: Inventory) -> None:
+        self.inventory_map[inv.id] = inv
 
     def read_inventory(self, id: int) -> Inventory:
         return self.inventory_map.get(id, None)

@@ -1,9 +1,10 @@
-from InventoryHandler import InventoryHandler
-from AbstractOrderInventoryService import AbstractOrderInventoryService
-from AbstractOrderService import AbstractOrderService
+from democustomerapi.use_case.InventoryHandler import InventoryHandler
+from democustomerapi.use_case.AbstractOrderInventoryService import AbstractOrderInventoryService
+from democustomerapi.use_case.AbstractOrderService import AbstractOrderService
 
-from entity import Order, OrderInventory
-from entity.Order import ORDER_STATUS_LATEST
+from democustomerapi.entity.Order import Order
+from democustomerapi.entity.OrderInventory import OrderInventory
+from democustomerapi.entity.Order import ORDER_STATUS_LATEST
 
 class OrderHandler:
 

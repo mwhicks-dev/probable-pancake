@@ -1,6 +1,5 @@
-from AbstractInventoryService import AbstractInventoryService
-
-from entity import Inventory
+from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
+from democustomerapi.entity.Inventory import Inventory
 
 class InventoryHandler:
 
@@ -20,6 +19,9 @@ class InventoryHandler:
         return item
     
     def add_new_item(self, inv: Inventory) -> None:
+        if inv is None:
+            raise ValueError("New item cannot be None")
+
         if inv.id is None:
             raise ValueError("New inventory item must have ID from data warehouse")
 
@@ -36,6 +38,9 @@ class InventoryHandler:
         return item.quantity
     
     def add_new_stock(self, id: int, quantity: int) -> None:
+        if quantity < 0:
+            raise ValueError("Cannot add negative stock")
+
         self._validate_id(id)
         item: Inventory = self._read_inventory(id)
 
@@ -44,6 +49,9 @@ class InventoryHandler:
         self._inv_service.update_inventory(id, item)
     
     def remove_stock(self, id: int, quantity: int) -> None:
+        if quantity < 0:
+            raise ValueError("Cannot remove negative stock")
+
         self._validate_id(id)
         item: Inventory = self._read_inventory(id)
 

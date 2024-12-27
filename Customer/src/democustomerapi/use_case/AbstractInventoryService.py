@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from entity import Inventory
+from democustomerapi.entity.Inventory import Inventory
 
 class AbstractInventoryService(ABC):
 
