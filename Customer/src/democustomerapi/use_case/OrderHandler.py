@@ -21,11 +21,22 @@ class OrderHandler:
         self._order_service = order_service
 
     def create_new_order(self, order: Order, items: dict[int, int]) -> int:
-        id: int = self._order_service.create_order(order)
+        if order is None:
+            raise ValueError("Order cannot be None")
+        if items is None or len(items) == 0:
+            raise ValueError("Order cannot be empty")
 
-        for item in items:
+        for (item, quantity) in items.items():
             # ensure item exists
             self._inv_handler.read_item_quantity(item)
+
+            # verify item quantity is acceptable
+            if quantity == 0:
+                raise ValueError("Cannot place an order for 0 of an item")
+            if quantity < 0:
+                raise ValueError("Cannot place an order for negative of an item")
+
+        id: int = self._order_service.create_order(order)
 
         for (item, quantity) in items.items():
             # add to order once we know all exist
@@ -49,7 +60,16 @@ class OrderHandler:
     
     def update_order_item(self, id: int, item: OrderInventory) -> None:
         self._validate_order_id(id)
-        self._item_service.set_item(item)
+        if item is None:
+            raise ValueError("Cannot update with None item")
+        self._inv_handler.read_item_quantity(item.item_id)
+
+        if item.quantity < 0:
+            raise ValueError("Cannot update item to have negative quantity")
+        if item.quantity == 0:
+            self._item_service.delete_item_from_order(id, item.item_id)
+        else:
+            self._item_service.set_item(item)
 
     def get_possible_statuses(self) -> list[str]:
         return list(ORDER_STATUS_LATEST)

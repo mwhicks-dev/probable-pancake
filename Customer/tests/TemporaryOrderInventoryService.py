@@ -5,6 +5,9 @@ class TemporaryOrderInventoryService(AbstractOrderInventoryService):
 
     item_map: dict[tuple[int, int], OrderInventory] = None
 
+    def __init__(self):
+        self.item_map = {}
+
     def set_item(self, item: OrderInventory) -> int:
         key: tuple[int, int] = (item.order_id, item.item_id)
         self.item_map[key] = item

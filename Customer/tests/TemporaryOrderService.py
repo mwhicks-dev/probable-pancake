@@ -1,5 +1,5 @@
-from democustomerapi.entity import Order
-from democustomerapi.use_case import AbstractOrderService
+from democustomerapi.entity.Order import Order
+from democustomerapi.use_case.AbstractOrderService import AbstractOrderService
 
 class TemporaryOrderService(AbstractOrderService):
 
