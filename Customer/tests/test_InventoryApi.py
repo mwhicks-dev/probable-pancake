@@ -73,7 +73,7 @@ def test_create_inventory_negativeId():
 
 def test_create_inventory_emptyName():
     input = {
-        "id": -723,
+        "id": 723,
         "name": ""
     }
 
@@ -135,13 +135,13 @@ def test_create_inventory_nullName():
 
 def test_create_inventory_nullQuantity():
     input = {
-        "id": None,
+        "id": 723,
         "name": "French Press",
         "quantity": None
     }
 
     response = client.post("/1/inventory", json=input)
-    assert response.status_code == 200
+    assert response.status_code == 422
 
 @pytest.fixture
 def create_inventory_fixture1():

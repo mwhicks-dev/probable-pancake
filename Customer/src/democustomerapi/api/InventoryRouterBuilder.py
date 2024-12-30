@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
+from democustomerapi.schema.NewInventoryDto import NewInventoryDto
+from democustomerapi.schema.ItemIdentifier import ItemIdentifier
 from democustomerapi.use_case.InventoryHandler import InventoryHandler
 from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
 from democustomerapi.api.IRouterBuilder import IRouterBuilder
@@ -11,19 +13,19 @@ class InventoryRouterBuilder(IRouterBuilder):
     def __init__(self, inventory_service: AbstractInventoryService):
         self.inventory_handler = InventoryHandler(inventory_service)
     
-    def _add_new_inventory(self, dto):
+    def _add_new_inventory(self, dto: NewInventoryDto) -> None:
         raise HTTPException(status_code=501)
 
-    def _get_item_specifiers(self, ):
+    def _get_item_specifiers(self) -> list[ItemIdentifier]:
         raise HTTPException(status_code=501)
 
-    def _get_item_quantity(self, id: int):
+    def _get_item_quantity(self, id: int) -> int:
         raise HTTPException(status_code=501)
 
-    def _add_stock(self, id: int, quantity: int):
+    def _add_stock(self, id: int, quantity: int) -> None:
         raise HTTPException(status_code=501)
 
-    def _remove_stock(self, id: int, quantity: int):
+    def _remove_stock(self, id: int, quantity: int) -> None:
         raise HTTPException(status_code=501)
     
     def build_router(self) -> APIRouter:

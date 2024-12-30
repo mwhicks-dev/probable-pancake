@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
+from democustomerapi.schema.NewOrderDto import NewOrderDto
+from democustomerapi.schema.OrderDto import OrderDto
 from democustomerapi.use_case.InventoryHandler import InventoryHandler
 from democustomerapi.use_case.OrderHandler import OrderHandler
 from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
@@ -19,22 +21,22 @@ class OrderRouterBuilder(IRouterBuilder):
         self.order_handler = OrderHandler(self.inventory_handler, 
                                           item_service, order_service)
     
-    def _create_order(self, dto):
+    def _create_order(self, dto: NewOrderDto) -> int:
         raise HTTPException(status_code=501)
 
-    def _read_order_by_id(self, id: int):
+    def _read_order_by_id(self, id: int) -> OrderDto:
         raise HTTPException(status_code=501)
 
-    def _read_order_statuses(self, ):
+    def _read_order_statuses(self) -> list[str]:
         raise HTTPException(status_code=501)
 
-    def _read_orders_by_status(self, status: str):
+    def _read_orders_by_status(self, status: str) -> list[int]:
         raise HTTPException(status_code=501)
 
-    def _read_orders_by_filter(self, dto):
+    def _read_orders_by_filter(self, last_name: str, dob: str) -> list[int]:
         raise HTTPException(status_code=501)
 
-    def _increment_order_status(self, id: int):
+    def _increment_order_status(self, id: int) -> None:
         raise HTTPException(status_code=501)
     
     def build_router(self) -> APIRouter:
