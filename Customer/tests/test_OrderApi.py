@@ -1,14 +1,34 @@
 import pytest
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from democustomerapi.main import app
+from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
+from democustomerapi.use_case.AbstractOrderService import AbstractOrderService
+from democustomerapi.use_case.AbstractOrderInventoryService import AbstractOrderInventoryService
 
-client: TestClient = None
+from democustomerapi.api.IRouterBuilder import IRouterBuilder
+from democustomerapi.api.InventoryRouterBuilder import InventoryRouterBuilder
+from democustomerapi.api.OrderRouterBuilder import OrderRouterBuilder
+
+from TemporaryInventoryService import TemporaryInventoryService
+from TemporaryOrderInventoryService import TemporaryOrderInventoryService
+from TemporaryOrderService import TemporaryOrderService
 
 @pytest.fixture(autouse=True)
 def setup_breakdown():
     # before
+    inv_service: AbstractInventoryService = TemporaryInventoryService()
+    order_service: AbstractOrderService = TemporaryOrderService()
+    item_service: AbstractOrderInventoryService = TemporaryOrderInventoryService()
+    inv_router_builder: IRouterBuilder = InventoryRouterBuilder(inv_service)
+    order_router_builder: IRouterBuilder = OrderRouterBuilder(inv_service, order_service, item_service)
+
+    app: FastAPI = FastAPI()
+    app.include_router(inv_router_builder.build_router())
+    app.include_router(order_router_builder.build_router())
+
+    global client
     client = TestClient(app)
 
     input = {
@@ -377,7 +397,7 @@ def test_read_order_by_filters1(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 200 == response.status_code
     assert 1 == len(response.json())
     assert order_id in response.json()
@@ -388,7 +408,7 @@ def test_read_order_by_filters2(setup_order):
         "dob": "1970/01/02"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 200 == response.status_code
     assert 0 == len(response.json())
 
@@ -398,7 +418,7 @@ def test_read_order_by_filters3(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 200 == response.status_code
     assert 0 == len(response.json())
 
@@ -408,7 +428,7 @@ def test_read_order_by_filters_emptyLastname(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 400 == response.status_code
 
 def test_read_order_by_filters_unprocessableName(setup_order):
@@ -417,7 +437,7 @@ def test_read_order_by_filters_unprocessableName(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_by_filters_unprocessableDob(setup_order):
@@ -426,7 +446,7 @@ def test_read_order_by_filters_unprocessableDob(setup_order):
         "dob": 48
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_by_filters_noName(setup_order):
@@ -434,7 +454,7 @@ def test_read_order_by_filters_noName(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_by_filters_noDob(setup_order):
@@ -442,7 +462,7 @@ def test_read_order_by_filters_noDob(setup_order):
         "last_name": "Martin"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_by_filters_nullName(setup_order):
@@ -451,7 +471,7 @@ def test_read_order_by_filters_nullName(setup_order):
         "dob": "1970/01/01"
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_by_filters_nullDob(setup_order):
@@ -460,11 +480,12 @@ def test_read_order_by_filters_nullDob(setup_order):
         "dob": None
     }
 
-    response = client.get("/1/order/filter", json=input)
+    response = client.get("/1/order/filter", params=input)
     assert 422 == response.status_code
 
 def test_read_order_statuses():
     response = client.get("/1/order_statuses")
+    assert 200 == response.status_code
     for i in range(0, len(response.json())):
         assert response.json()[i] == ORDER_STATUS_LATEST[i]
 
@@ -479,7 +500,7 @@ def test_read_order_ids_by_status(setup_order):
         assert 0 == len(response.json())
 
 def test_increment_order_status(setup_order):
-    response == client.put(f"/1/order/{order_id}/increment")
+    response = client.put(f"/1/order/{order_id}/increment")
     assert 200 == response.status_code
     response = client.get(f"/1/order/{order_id}")
     assert 200 == response.status_code

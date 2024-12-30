@@ -1,15 +1,26 @@
 import pytest
-import json
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from democustomerapi.main import app
+from democustomerapi.use_case.AbstractInventoryService import AbstractInventoryService
+from democustomerapi.api.IRouterBuilder import IRouterBuilder
+from democustomerapi.api.InventoryRouterBuilder import InventoryRouterBuilder
+
+from TemporaryInventoryService import TemporaryInventoryService
 
 client: TestClient = None
 
 @pytest.fixture(autouse=True)
 def setup_breakdown():
     # before
+    inv_service: AbstractInventoryService = TemporaryInventoryService()
+    inv_router_builder: IRouterBuilder = InventoryRouterBuilder(inv_service)
+
+
+    app: FastAPI = FastAPI()
+    app.include_router(inv_router_builder.build_router())
+
     global client
     client = TestClient(app)
 
